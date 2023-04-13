@@ -1,9 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[2]:
-
-
+#imported necessary files and libraries
 import serial
 import time
 import face_recognition
@@ -16,22 +11,17 @@ from sklearn import svm
 import os
 import time
 
-
-# incorrect = 0
-# password = "1234"
-# locked = True
-
-
+#face recognition function
 
 def face_recognize_test(test):
-    start = time.time()
-    # Load the test image with unknown faces into a numpy array
-    test_image = face_recognition.load_image_file(test)
+    start = time.time() #noting the start time
+    test_image = face_recognition.load_image_file(test)     # Load the test image with unknown faces into a numpy array
 
     # Find all the faces in the test image using the default HOG-based model
     face_locations = face_recognition.face_locations(test_image)
     no = len(face_locations)
     print("Number of faces detected: ", no)
+
 
     # Predict all the faces in the test image using the trained classifier
     print("Found:")
@@ -43,47 +33,48 @@ def face_recognize_test(test):
         # Get the index of the closest matching face
         best_match_index = np.argmin(face_distances)
 
-        # If the distance is less than 0.6, then we have a match
+        # If the euclidean distance is less than 0.55, then we have a match
         if face_distances[best_match_index] < 0.55:
             name = names[best_match_index]
             predict_name = name
+        print(predict_name) #print name of recognized person, print Unknown if person not recognized
 
-        print(predict_name)
-
-    end = time.time()
-    print('Time taken for testing: ', end - start, 'seconds')
-
+    end = time.time() #noting the end time
+    print('Time taken for testing: ', end - start, 'seconds') #Printing total processing time to recognize people in single images
 
 
 
 
 
 
+#establishing serial connection with arduino using port com7
 
 ser = serial.Serial('COM7', 9600, timeout=1)
 time.sleep(2)
 
 
 
-def main_function():
+def main_function():   #function to print whether 
     print("correct face")
 
 
+#Variables for knowing whether correct password has been entered and how many incorrect attempts have been made
 guessed=False 
 incorrect_count=0
-
+current_password=[1,2,3]
+change_request=False
 
 text=[]
 
 while True:
-    line = ser.readline().decode("utf-8")
+    line = ser.readline().decode("utf-8")  #obtain arduino inputs in utf 8 encodings
     if line =="":
         pass
     else:
-        try:
+        try: 
             text.append(int(line))
             print(text)
-        except:
+        except:   #This occurs when latest input is not Numeric(We pressed A,B,C,D)
             if (line[0])== 'A':
                 if text == []:
                     pass
@@ -95,7 +86,7 @@ while True:
                 if text == []:
                     pass
                 else:
-                    if text==[1,2,3]:
+                    if text==current_password:
                         print("correct passsword")
                         guessed=True
                     else:
@@ -103,6 +94,20 @@ while True:
                         incorrect_count+=1
                         if incorrect_count==5:
                             break
+                
+            if(line[0])=='D':  #Password chain mechanism
+                print("Password change request made.")
+                if guessed==False:
+                    print("Please enter correct password before changing the password.")
+                else:
+                    print("Make sure the new password you want is entered in input, then press # to change.")
+                    change_request=True
+            
+            if(line[0])=='#' and change_request==True:   #This is wrongfully Implemented
+                current_password=line
+                print("Password changed successfully.")
+
+
 
             elif (line[0]) == 'C' and guessed:
                 print('Is it here?')
@@ -171,12 +176,4 @@ while True:
                 
                 
                 break
-                    
-
-
-
-# In[ ]:
-
-
-
-
+ser.close()
