@@ -38,6 +38,7 @@ def face_recognize_test(test):
             name = names[best_match_index]
             predict_name = name
         print(predict_name) #print name of recognized person, print Unknown if person not recognized
+        # move_servo('open')
 
     end = time.time() #noting the end time
     print('Time taken for testing: ', end - start, 'seconds') #Printing total processing time to recognize people in single images
@@ -52,6 +53,10 @@ def face_recognize_test(test):
 ser = serial.Serial('COM7', 9600, timeout=1)
 time.sleep(2)
 
+#Function to move servo 
+def move_servo(position):  
+    ser.write(bytes(str(position), 'utf-8'))
+
 
 
 def main_function():   #function to print whether 
@@ -63,7 +68,7 @@ guessed=False
 incorrect_count=0
 current_password=[1,2,3]
 change_request=False
-
+# move_servo(0)
 text=[]
 
 while True:
