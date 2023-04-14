@@ -8,8 +8,13 @@
   https://dronebotworkshop.com
 */
 
-// Include the Keypad library
+// Include the Keypad and Servo library
 #include <Keypad.h>
+#include <Servo.h>
+
+//Servo variable created
+
+Servo myservo;
 
 // Constants for row and column sizes
 const byte ROWS = 4;
@@ -33,6 +38,7 @@ Keypad customKeypad = Keypad(makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS)
 void setup() {
   // Setup serial monitor
   Serial.begin(9600);
+  myservo.attach(10); //Pin no for servo motor
 }
 
 void loop() {
@@ -42,5 +48,11 @@ void loop() {
   if (customKey) {
     // Print key value to serial monitor
     Serial.println(customKey);
+  }x
+  // Servo code
+  if (Serial.available() > 0) {
+    int pos = 180;
+    myservo.write(pos);
+    // Serial.println(pos);
   }
 }
