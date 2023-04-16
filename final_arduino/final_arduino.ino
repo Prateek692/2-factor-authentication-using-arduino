@@ -49,11 +49,11 @@ void setup() {
 void loop() {
   char key = keypad.getKey();
   if (key) {   //If keypad button is pressed
-    Serial.print("Key Pressed: ");
-    Serial.println(key);
+    //Serial.print("Key Pressed: ");
+    Serial.print(key);
   }
 
-  if(stage1 ==true &&stage2==false&& (millis() - lastTime) > 10000){   //Shut face unlock mechanism if face not recognized within 10secs
+  if(stage1 ==true &&stage2==false&& (millis() - lastTime) > 15000){   //Shut face unlock mechanism if face not recognized within 10secs
     stage1=false;
     digitalWrite (YELLOW_BULB, LOW);   
     digitalWrite (RED_BULB, HIGH);   

@@ -32,5 +32,4 @@ while True:
     elif what=='shut':
         break
     
-
 ser.close()
