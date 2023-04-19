@@ -42,6 +42,8 @@ def face_recognize_test(test):
 
     end = time.time() #noting the end time
     print('Time taken for testing: ', end - start, 'seconds') #Printing total processing time to recognize people in single images
+    if no==0:
+        identified=False
     return identified
 #establishing serial connection with arduino using port com7
 
@@ -60,6 +62,7 @@ while 1:
     if(data==""):
         continue 
     if data>='1' and data<='9':
+        ser.write(bytes('written', 'utf-8'))
         password+=data
     if data=='A':
         if password!="":
@@ -69,19 +72,21 @@ while 1:
             if password==current_password:
                 print('Correct Password')
                 guessed=True
-                ser.write(bytes('786', 'utf-8'))
+                ser.write(bytes('part1', 'utf-8'))
             else:
                 print('Incorrect Password')
                 incorrect_count+=1
                 if incorrect_count==5:
                     print('Too many incorrect attempts')
+                    ser.write(bytes('enough', 'utf-8'))
                     break
+                ser.write(bytes('wrong', 'utf-8'))
         
     if guessed==True:
         # yaha se shuru hai webcam
         # Load the face encodings from the CSV file
-        df = pd.read_csv('face_encodings.csv')
-        df1 = pd.read_csv('names.csv')
+        df = pd.read_csv('AI Tools/face_encodings.csv')
+        df1 = pd.read_csv('AI Tools/names.csv')
         # Convert the DataFrame to a list of lists
         encodings = df.values.tolist()
         names= df1.values.tolist()
@@ -130,17 +135,14 @@ while 1:
         # for image in test_list:
         unlock=face_recognize_test(test_image)
         if unlock==True:
-            ser.write(bytes('592', 'utf-8'))
+            ser.write(bytes('part2', 'utf-8'))
+        else:
+            ser.write(bytes('wrong', 'utf-8'))
         print()
-        
-        
-        
-        
+        os.remove(test_image)
         break
-    
     if data=='*':
+        ser.write(bytes('wrong', 'utf-8'))
         break
-    # if guessed:
-    #     ser.write(bytes('786', 'utf-8'))
     print(password)
 
