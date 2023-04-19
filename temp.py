@@ -125,8 +125,8 @@ while True:
 
 
                 # Load the face encodings from the CSV file
-                df = pd.read_csv('face_encodings.csv')
-                df1 = pd.read_csv('names.csv')
+                df = pd.read_csv('AI Tools/face_encodings.csv')
+                df1 = pd.read_csv('AI Tools/names.csv')
                 # Convert the DataFrame to a list of lists
                 encodings = df.values.tolist()
                 names= df1.values.tolist()
