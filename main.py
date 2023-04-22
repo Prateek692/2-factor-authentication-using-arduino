@@ -62,7 +62,6 @@ while 1:
     if(data==""):
         continue 
     if data>='1' and data<='9':
-        ser.write(bytes('written', 'utf-8'))
         password+=data
     if data=='A':
         if password!="":
@@ -76,12 +75,12 @@ while 1:
             else:
                 print('Incorrect Password')
                 incorrect_count+=1
+                password=""
                 if incorrect_count==5:
                     print('Too many incorrect attempts')
                     ser.write(bytes('enough', 'utf-8'))
                     break
                 ser.write(bytes('wrong', 'utf-8'))
-        
     if guessed==True:
         # yaha se shuru hai webcam
         # Load the face encodings from the CSV file

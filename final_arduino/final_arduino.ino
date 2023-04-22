@@ -53,7 +53,21 @@ void loop() {
   char key = keypad.getKey();
   if (key) {   //If keypad button is pressed
     //Serial.print("Key Pressed: ");
-    Serial.print(key);
+    tone(buzzer, 3000); // Send 1KHz sound signal...
+    delay(150);        // ...for 1 sec
+    noTone(buzzer);     // Stop sound... 
+    if(key=='C'&&stage2==true){
+      angle = 0;
+      servo.write(angle);
+      digitalWrite (YELLOW_BULB, LOW);   
+      digitalWrite (RED_BULB, HIGH); 
+      digitalWrite (GREEN_BULB, LOW);   
+      stage1=false;
+      stage2=false;
+      Serial.println("Rotating Servo Motor to 0°");
+    }
+    else 
+      Serial.print(key);
   }
   if(stage1 ==true &&stage2==false&& (millis() - lastTime) > 15000){   //Shut face unlock mechanism if face not recognized within 10secs
     stage1=false;
@@ -61,7 +75,7 @@ void loop() {
     digitalWrite (RED_BULB, HIGH);   
     digitalWrite (GREEN_BULB, LOW);   
   }
-  else if (stage2==true && (millis() - lastTime1) > 5000) { // Relock the latch after 5 secs of being unlocked
+  else if (stage2==true && (millis() - lastTime1) > 50000) { // Relock the latch after 5 secs of being unlocked
     angle = 0;
     servo.write(angle);
     digitalWrite (YELLOW_BULB, LOW);   
@@ -74,11 +88,21 @@ void loop() {
 
   if(Serial.available()){  //If python code passed input to arduino
     x = Serial.readString();
-    if(x=="written"){
-      tone(buzzer, 3000); // Send 1KHz sound signal...
-      delay(150);        // ...for 1 sec
-      noTone(buzzer);     // Stop sound... 
-    }
+    // if(x=="written"){
+    //   tone(buzzer, 3000); // Send 1KHz sound signal...
+    //   delay(150);        // ...for 1 sec
+    //   noTone(buzzer);     // Stop sound... 
+    // }
+    // if(x=="closeit"&&stage2==true){
+    //   angle = 0;
+    //   servo.write(angle);
+    //   digitalWrite (YELLOW_BULB, LOW);   
+    //   digitalWrite (RED_BULB, HIGH); 
+    //   digitalWrite (GREEN_BULB, LOW);   
+    //   stage1=false;
+    //   stage2=false;
+    //   Serial.println("Rotating Servo Motor to 0°");
+    // }
     if(x=="wrong"){
       tone(buzzer, 1000); // Send 1KHz sound signal...
       delay(200);        // ...for 1 sec
